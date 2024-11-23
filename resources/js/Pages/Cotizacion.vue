@@ -15,11 +15,12 @@
       <div class="flex items-center gap-6">
         <!-- Input para buscar clientes -->
         <input type="text" placeholder="Buscar Cliente" class="glass-input w-full p-4 rounded-xl"/>
-        <button class="btn-primary flex items-center gap-2">
-          <font-awesome-icon :icon="['fas', 'user-plus']"/>
-          Crear Cliente
-        </button>
+        <button @click="openCreateClienteModal" class="btn-primary flex items-center gap-2">
+        <font-awesome-icon :icon="['fas', 'user-plus']" />
+        Crear Cliente
+      </button>
       </div>
+      <create-cliente-modal :show="showCreateClienteModal" @close="closeCreateClienteModal" />
     </div>
 
     <!-- Listado de Productos -->
@@ -132,6 +133,17 @@ import { ref, reactive } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faCalculator, faUserPlus, faBoxOpen, faShoppingCart, faDollarSign, faCartPlus, faTrash, faTimes, faSave, faList, faMoneyBillWave } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import CreateClienteModal from '@/Pages/Create.vue';
+
+const showCreateClienteModal = ref(false);
+
+const openCreateClienteModal = () => {
+  showCreateClienteModal.value = true;
+};
+
+const closeCreateClienteModal = () => {
+  showCreateClienteModal.value = false;
+};
 
 // Agregar iconos a la biblioteca
 library.add(faCalculator, faUserPlus, faBoxOpen, faShoppingCart, faDollarSign, faCartPlus, faTrash, faTimes, faSave, faList, faMoneyBillWave);

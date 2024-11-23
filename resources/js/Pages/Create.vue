@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+  <modal :show="showModal" @close="closeModal">
     <h1 class="text-2xl font-bold mb-6">Crear Cliente</h1>
     <form @submit.prevent="submit">
       <div class="mb-4">
@@ -18,30 +18,34 @@
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">Guardar Cliente</button>
       </div>
     </form>
-  </div>
+  </modal>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import Modal from '@/Components/Modal.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 
+const showModal = ref(false);
 const form = useForm({
   nombre: '',
   email: '',
   telefono: '',
 });
 
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
 const submit = () => {
-  form.post(route('clientes.store'));
+  form.post(route('clientes.store'), {
+    onSuccess: () => {
+      closeModal();
+    },
+  });
 };
 </script>
-
-<style scoped>
-/* Puedes agregar estilos personalizados aquí */
-</style>
-
-  
-  <style scoped>
-  /* Puedes agregar estilos personalizados aquí si lo deseas */
-  </style>
-  
