@@ -27,6 +27,3 @@ const close = () => {
 };
 </script>
 
-<style scoped>
-/* Personaliza los estilos del modal según tus necesidades */
-</style>

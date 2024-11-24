@@ -13,12 +13,12 @@ use App\Http\Controllers\ProductoController;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Aquí puedes registrar las rutas de la aplicación.
+|
 |
 */
 
 // Ruta principal (usando HomeController)
-Route::get('/', [CotizacionController::class, 'index']); // Renderiza la página 'Home.vue' como la página principal
+Route::get('/', [CotizacionController::class, 'index']); 
 
 // Productos )
 Route::get('/productos', [ProductoController::class, 'apiIndex']);

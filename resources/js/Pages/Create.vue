@@ -29,7 +29,7 @@ import { ref } from 'vue';
 import Modal from '@/Components/Modal.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import Toastify from 'toastify-js';
-import "toastify-js/src/toastify.css"; // Importar los estilos de Toastify
+import "toastify-js/src/toastify.css"; 
 
 const showModal = ref(false);
 const isLoading = ref(false);
@@ -55,38 +55,38 @@ const resetForm = () => {
 };
 
 const submit = () => {
-  isLoading.value = true; // Inicia el estado de carga
+  isLoading.value = true; 
 
   form.post(route('clientes.store'), {
     onSuccess: () => {
-      // Mostrar notificación de éxito utilizando Toastify
+
       Toastify({
         text: "Cliente guardado correctamente",
-        duration: 5000, // La notificación durará 5 segundos
-        gravity: "top", // La notificación se mostrará en la parte superior
-        position: "center", // Centrar la notificación horizontalmente
-        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Color similar al de error pero con tonos de éxito
+        duration: 5000, 
+        gravity: "top", 
+        position: "center", 
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", 
         className: "toast-success",
-        stopOnFocus: true, // Mantiene el toast mientras el usuario está enfocado
+        stopOnFocus: true, 
       }).showToast();
 
-      // Utiliza un pequeño retraso para permitir que la notificación se vea antes de cerrar el modal
+      
       setTimeout(() => {
         closeModal();
-      }, 500); // Esperar medio segundo antes de cerrar el modal
+      }, 500); 
     },
     onError: (errors) => {
       Toastify({
         text: errors.nombre ? "El usuario ya se encuentra registrado en nuestros registros" : "El usuario ya se encuentra registrado en nuestros registros",
-        duration: 5000, // Mostrar por 5 segundos
+        duration: 5000, 
         gravity: "top",
         position: "center",
-        backgroundColor: "linear-gradient(to right, #FF5F6D, #FFC371)", // Personalizar el color para errores
+        backgroundColor: "linear-gradient(to right, #FF5F6D, #FFC371)", 
         className: "toast-error",
       }).showToast();
     },
     onFinish: () => {
-      isLoading.value = false; // Finaliza el estado de carga
+      isLoading.value = false; 
     },
   });
 };
