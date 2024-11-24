@@ -46,7 +46,7 @@
           <tr class="text-cyan-300 text-lg">
             <th class="px-6 py-4 border-b-2 border-cyan-200 font-bold">Nombre del Producto</th>
             <th class="px-6 py-4 border-b-2 border-cyan-200 font-bold">Precio</th>
-            <th class="px-6 py-4 border-b-2 border-cyan-200 font-bold">Stock Disponible</th>
+            <th class="px-6 py-4 border-b-2 border-cyan-200 font-bold"></th>
             <th class="px-6 py-4 border-b-2 border-cyan-200 font-bold">Acciones</th>
           </tr>
         </thead>
