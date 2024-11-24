@@ -22,6 +22,7 @@ Route::get('/', [CotizacionController::class, 'index']); // Renderiza la página
 
 // Productos )
 Route::get('/productos', [ProductoController::class, 'apiIndex']);
+Route::get('/buscar-clientes', [ClienteController::class, 'buscarClientes'])->name('clientes.buscar');
 
 
 

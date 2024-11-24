@@ -27,4 +27,10 @@ class ClienteController extends Controller
 
         return redirect()->route('clientes.create')->with('success', 'Cliente creado exitosamente.');
     }
+
+    public function buscarClientes(Request $request)
+{
+    $clientes = Cliente::where('nombre', 'like', '%' . $request->input('query') . '%')->get();
+    return response()->json($clientes);
+}
 }

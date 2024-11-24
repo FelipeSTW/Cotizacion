@@ -14,12 +14,20 @@
       </h2>
       <div class="flex items-center gap-6">
         <!-- Input para buscar clientes -->
-        <input type="text" placeholder="Buscar Cliente" class="glass-input w-full p-4 rounded-xl"/>
+        <input type="text" v-model="busquedaCliente" @input="buscarClientes" placeholder="Buscar Cliente" class="glass-input w-full p-4 rounded-xl"/>
         <button @click="openCreateClienteModal" class="btn-primary flex items-center gap-2">
           <font-awesome-icon :icon="['fas', 'user-plus']" />
           Crear Cliente
         </button>
       </div>
+      
+      <!-- Lista de Clientes Sugeridos -->
+      <ul v-if="clientesFiltrados.length" class="bg-white text-black mt-4 rounded-lg shadow-lg">
+        <li v-for="cliente in clientesFiltrados" :key="cliente.id" @click="seleccionarCliente(cliente)" class="p-4 hover:bg-gray-200 cursor-pointer">
+          {{ cliente.nombre }} - {{ cliente.email }}
+        </li>
+      </ul>
+
       <create-cliente-modal :show="showCreateClienteModal" @close="closeCreateClienteModal" />
     </div>
 
@@ -147,9 +155,36 @@ const closeCreateClienteModal = () => {
 // Agregar iconos a la biblioteca
 library.add(faCalculator, faUserPlus, faBoxOpen, faShoppingCart, faDollarSign, faCartPlus, faTrash, faTimes, faSave, faList, faMoneyBillWave);
 
-// Datos de productos y cliente
+// Datos de cliente
+const busquedaCliente = ref('');
+const clientesFiltrados = ref([]);
+
+// Buscar clientes en la API
+const buscarClientes = async () => {
+  if (busquedaCliente.value.length > 1) {
+    try {
+      const response = await axios.get('/buscar-clientes', {
+        params: { query: busquedaCliente.value },
+      });
+      clientesFiltrados.value = response.data;
+    } catch (error) {
+      console.error('Error al buscar clientes:', error);
+    }
+  } else {
+    clientesFiltrados.value = [];
+  }
+};
+
+// Seleccionar un cliente de la lista
+const seleccionarCliente = (cliente) => {
+  busquedaCliente.value = cliente.nombre;
+  clientesFiltrados.value = []; // Limpiar la lista de sugerencias
+  console.log('Cliente seleccionado:', cliente); // Aquí podrías manejar el cliente seleccionado (guardar ID, etc.)
+};
+
+// Datos de productos
 const productos = ref([]);
-const busquedaProducto = ref("");
+const busquedaProducto = ref('');
 const productosSeleccionados = reactive([]);
 
 // Cargar productos desde la API
@@ -201,6 +236,7 @@ const actualizarTotales = () => {
   // Solo para forzar la reactividad en los calculos
 };
 </script>
+
 
 
 
@@ -278,5 +314,9 @@ const actualizarTotales = () => {
 .btn-primary:hover, .btn-secondary:hover, .btn-success:hover, .btn-danger:hover {
   transform: scale(1.1);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+li.p-4.hover\:bg-gray-200.cursor-pointer {
+  color:#66bb6a
 }
 </style>
