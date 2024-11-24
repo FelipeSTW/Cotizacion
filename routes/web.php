@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,12 @@ use App\Http\Controllers\ClienteController;
 
 // Ruta principal (usando HomeController)
 Route::get('/', [CotizacionController::class, 'index']); // Renderiza la página 'Home.vue' como la página principal
+
+// Productos )
+Route::get('/productos', [ProductoController::class, 'apiIndex']);
+
+
+
 
 
 // creacion del cliente )
