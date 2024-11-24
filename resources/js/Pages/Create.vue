@@ -7,15 +7,18 @@
         <input type="text" id="nombre" v-model="form.nombre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
       </div>
       <div class="mb-4">
-        <label for="email" class="block text-sm font-medium text-gray-700">Email  </label>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
         <input type="email" id="email" v-model="form.email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
       </div>
       <div class="mb-4">
         <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
         <input type="text" id="telefono" v-model="form.telefono" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
       </div>
-      <div class="flex justify-end">
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">Guardar Cliente</button>
+      <div class="flex justify-end items-center gap-4">
+        <div v-if="isLoading" class="text-blue-500 font-medium">Guardando...</div>
+        <button type="submit" :disabled="isLoading" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          Guardar Cliente
+        </button>
       </div>
     </form>
   </modal>
@@ -25,8 +28,11 @@
 import { ref } from 'vue';
 import Modal from '@/Components/Modal.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
+import Toastify from 'toastify-js';
+import "toastify-js/src/toastify.css"; // Importar los estilos de Toastify
 
 const showModal = ref(false);
+const isLoading = ref(false);
 const form = useForm({
   nombre: '',
   email: '',
@@ -39,18 +45,57 @@ const openModal = () => {
 
 const closeModal = () => {
   showModal.value = false;
+  resetForm();
+};
+
+const resetForm = () => {
+  form.nombre = '';
+  form.email = '';
+  form.telefono = '';
 };
 
 const submit = () => {
+  isLoading.value = true; // Inicia el estado de carga
+
   form.post(route('clientes.store'), {
     onSuccess: () => {
-      closeModal();
+      // Mostrar notificación de éxito utilizando Toastify
+      Toastify({
+        text: "Cliente guardado correctamente",
+        duration: 5000, // La notificación durará 5 segundos
+        gravity: "top", // La notificación se mostrará en la parte superior
+        position: "center", // Centrar la notificación horizontalmente
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Color similar al de error pero con tonos de éxito
+        className: "toast-success",
+        stopOnFocus: true, // Mantiene el toast mientras el usuario está enfocado
+      }).showToast();
+
+      // Utiliza un pequeño retraso para permitir que la notificación se vea antes de cerrar el modal
+      setTimeout(() => {
+        closeModal();
+      }, 500); // Esperar medio segundo antes de cerrar el modal
+    },
+    onError: (errors) => {
+      Toastify({
+        text: errors.nombre ? "El usuario ya se encuentra registrado en nuestros registros" : "El usuario ya se encuentra registrado en nuestros registros",
+        duration: 5000, // Mostrar por 5 segundos
+        gravity: "top",
+        position: "center",
+        backgroundColor: "linear-gradient(to right, #FF5F6D, #FFC371)", // Personalizar el color para errores
+        className: "toast-error",
+      }).showToast();
+    },
+    onFinish: () => {
+      isLoading.value = false; // Finaliza el estado de carga
     },
   });
 };
 </script>
-<style>
 
+
+
+
+<style>
 .bg-white.rounded-lg.shadow-xl.w-full.max-w-lg.p-6.relative {
   text-align: center;
 }
@@ -58,16 +103,16 @@ const submit = () => {
   margin-top: 15px;
 }
 input#email {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 button.absolute.top-2.right-2.text-white.bg-red-600.hover\:bg-red-700.rounded-full.px-4.py-2.shadow-md.transition.duration-300.ease-in-out.flex.items-center.gap-2 {
-    background: red;
-    cursor: pointer;
+  background: red;
+  cursor: pointer;
 }
 button.bg-blue-500.text-white.px-4.py-2.rounded-md.hover\:bg-blue-700 {
-    
-    margin-top: 15px;
-    background-color: greenyellow;
-    cursor: pointer;
+  margin-top: 15px;
+  background-color: greenyellow;
+  cursor: pointer;
 }
+
 </style>
