@@ -57,6 +57,7 @@
             <td class="px-6 py-4 border-b border-cyan-200">{{ producto.stock }}</td>
             <td class="px-6 py-4 border-b border-cyan-200">
               <button @click="agregarProducto(producto)" class="btn-success flex items-center gap-2" :disabled="producto.stock <= 0">
+                Stock Disponible: {{ producto.stock }}
                 <font-awesome-icon :icon="['fas', 'cart-plus']"/>
                 Agregar
               </button>
@@ -178,8 +179,8 @@ const buscarClientes = async () => {
 // Seleccionar un cliente de la lista
 const seleccionarCliente = (cliente) => {
   busquedaCliente.value = cliente.nombre;
-  clientesFiltrados.value = []; // Limpiar la lista de sugerencias
-  console.log('Cliente seleccionado:', cliente); // Aquí podrías manejar el cliente seleccionado (guardar ID, etc.)
+  clientesFiltrados.value = []; 
+  console.log('Cliente seleccionado:', cliente);
 };
 
 // Datos de productos
@@ -206,14 +207,29 @@ const productosFiltrados = computed(() => {
 
 // Agregar un producto a la cotización
 const agregarProducto = (producto) => {
-  const productoExistente = productosSeleccionados.find(p => p.id === producto.id);
-  if (productoExistente) {
-    productoExistente.cantidad++;
+  if (producto.stock > 0) {
+    const productoExistente = productosSeleccionados.find(p => p.id === producto.id);
+    if (productoExistente) {
+      if (producto.stock > productoExistente.cantidad) {
+        productoExistente.cantidad++;
+        productoExistente.subtotal = productoExistente.cantidad * producto.precio;
+      } else {
+        alert('No hay suficiente stock disponible para agregar más de este producto.');
+        return;
+      }
+    } else {
+      productosSeleccionados.push({ ...producto, cantidad: 1, subtotal: producto.precio });
+    }
+    
+    // Restar 1 del stock disponible del producto
+    producto.stock--;
+
+    actualizarTotales();
   } else {
-    productosSeleccionados.push({ ...producto, cantidad: 1, subtotal: producto.precio });
+    alert('No hay stock disponible para este producto.');
   }
-  actualizarTotales();
 };
+
 
 // Eliminar un producto de la cotización
 const eliminarProducto = (index) => {
@@ -221,19 +237,45 @@ const eliminarProducto = (index) => {
   actualizarTotales();
 };
 
-// Actualizar el subtotal de un producto
+// Actualizar el subtotal de un producto y el stock disponible
 const actualizarSubtotal = (index) => {
-  const producto = productosSeleccionados[index];
-  producto.subtotal = producto.precio * producto.cantidad;
-  actualizarTotales();
+  const productoSeleccionado = productosSeleccionados[index];
+
+  // Encuentra el producto original de la lista de productos
+  const productoOriginal = productos.value.find(p => p.id === productoSeleccionado.id);
+
+  if (productoOriginal) {
+    // Calcula la diferencia entre la nueva cantidad y la cantidad previamente seleccionada
+    const diferencia = productoSeleccionado.cantidad - (productoSeleccionado.cantidadAnterior || 1);
+
+    if (productoOriginal.stock >= diferencia) {
+      // Actualiza el stock disponible
+      productoOriginal.stock -= diferencia;
+
+      // Almacena la cantidad actual para futuros cálculos
+      productoSeleccionado.cantidadAnterior = productoSeleccionado.cantidad;
+
+      // Actualiza el subtotal del producto seleccionado
+      productoSeleccionado.subtotal = productoSeleccionado.precio * productoSeleccionado.cantidad;
+
+      // Actualiza los totales generales
+      actualizarTotales();
+    } else {
+      // Si no hay suficiente stock, evita el cambio y muestra un mensaje
+      alert('No hay suficiente stock disponible para esta cantidad.');
+      // Restablece la cantidad al valor anterior
+      productoSeleccionado.cantidad = productoSeleccionado.cantidadAnterior || 1;
+    }
+  }
 };
+
 
 // Calcular el total de productos y el precio total
 const totalProductos = computed(() => productosSeleccionados.reduce((acc, producto) => acc + producto.cantidad, 0));
 const precioTotal = computed(() => productosSeleccionados.reduce((acc, producto) => acc + producto.subtotal, 0));
 
 const actualizarTotales = () => {
-  // Solo para forzar la reactividad en los calculos
+ 
 };
 </script>
 
@@ -241,7 +283,7 @@ const actualizarTotales = () => {
 
 
 <style scoped>
-/* Fondo animado con un gradiente impactante */
+
 .container {
   background: linear-gradient(135deg, #515685, #84b9e7);
   animation: gradientShift 20s ease infinite alternate;
@@ -256,7 +298,7 @@ const actualizarTotales = () => {
   }
 }
 
-/* Estilo Glassmorphism para tarjetas */
+
 .glass-card {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
@@ -266,7 +308,7 @@ const actualizarTotales = () => {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-/* Estilo moderno para inputs */
+
 .glass-input {
   background: rgba(255, 255, 255, 0.2);
   border: none;
@@ -274,7 +316,7 @@ const actualizarTotales = () => {
   color: white;
 }
 
-/* Botones con estilos modernos */
+
 .btn-primary {
   background-color: #00bcd4;
   color: black;
