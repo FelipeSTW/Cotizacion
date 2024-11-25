@@ -1,66 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Proyecto Yute
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descripción
+Este proyecto es una aplicación web desarrollada con Vue 3 y Laravel 10 , utilizando la arquitectura de Inertia.js para proporcionar una experiencia de usuario fluida similar a una aplicación de una sola página (SPA). El proyecto incluye funcionalidades de cotización de productos y manejo de clientes.
 
-## About Laravel
+## Requisitos
+- Laragon (o cualquier otro entorno LAMP/WAMP que incluya PHP, MySQL, y un servidor web).
+- Node.js y npm (para administrar las dependencias del frontend).
+- MySQL como sistema de gestión de bases de datos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Instalación
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **Clonar el Repositorio**
+   ```sh
+   git clone <URL_REPOSITORIO>
+   cd yute_project
+   ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. **Instalar Dependencias del Backend**
+   Asegúrate de tener Laragon ejecutando para acceder a MySQL y PHP.
+   ```sh
+   composer install
+   ```
 
-## Learning Laravel
+3. **Instalar Dependencias del Frontend**
+   Asegúrate de tener Node.js instalado.
+   ```sh
+   npm install
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+4. **Configurar el Archivo .env**
+   Copia el archivo de configuración de ejemplo y configura tus variables de entorno, incluyendo la conexión con la base de datos `yute_dba`.
+   ```sh
+   cp .env.example .env
+   ```
+   Actualiza las credenciales de conexión a la base de datos:
+   ```env
+   DB_DATABASE=yute_dba
+   DB_USERNAME=root
+   DB_PASSWORD="" sin contraseña o si es necesario aplicar 1234
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+5. **Generar la Clave de la Aplicación**
+   ```sh
+   php artisan key:generate
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+6. **Ejecutar Migraciones**
+   ```sh
+   php artisan migrate
+   ```
 
-## Laravel Sponsors
+7. **Iniciar el Servidor de Desarrollo**
+   - Inicia el servidor PHP con:
+     ```sh
+     php artisan serve
+     ```
+   - Inicia el servidor de desarrollo de Vite:
+     ```sh
+     npm run dev
+     ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Dependencias
+Las siguientes dependencias se utilizan en este proyecto:
 
-### Premium Partners
+### Desarrollo
+- **@inertiajs/vue3**: Inertia.js con Vue 3 para la integración del lado del cliente.
+- **@tailwindcss/forms**: Plugin para estilizar formularios con Tailwind CSS.
+- **@vitejs/plugin-vue**: Plugin de Vite para Vue.js.
+- **autoprefixer**: Proveedor de soporte para navegadores antiguos.
+- **axios**: Cliente HTTP para realizar solicitudes asíncronas.
+- **laravel-vite-plugin**: Integración de Vite con Laravel.
+- **postcss**: Utilidad de procesamiento de CSS.
+- **tailwindcss**: Framework CSS para diseños rápidos y consistentes.
+- **vite**: Herramienta para el desarrollo de frontend rápido.
+- **vue**: Biblioteca de interfaz de usuario progresiva.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Producción
+- **@fortawesome/free-solid-svg-icons**: Conjunto de íconos de FontAwesome.
+- **@fortawesome/vue-fontawesome**: Integración de íconos FontAwesome con Vue.js.
+- **@inertiajs/inertia**: Biblioteca de Inertia para la gestión de peticiones en el lado del cliente.
+- **@inertiajs/inertia-vue3**: Integración de Inertia con Vue 3.
+- **events-browserify**: Soporte para eventos en el navegador.
+- **toastify-js**: Biblioteca para mostrar notificaciones emergentes.
+- **ziggy-js**: Proporciona las rutas de Laravel en JavaScript para facilitar el enrutamiento.
 
-## Contributing
+## Base de Datos
+El proyecto utiliza una base de datos MySQL llamada `yute_dba`. Las migraciones automáticas se encargan de crear las tablas necesarias.
+Esta se encuentra en la siguiente ruta :database\mi_base_de_datos\yute_dba.sql
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Comandos Útiles
 
-## Code of Conduct
+- **Ejecutar Migraciones**: `php artisan migrate`
+- **Revertir Migraciones**: `php artisan migrate:rollback`
+- **Iniciar Servidor de Desarrollo**: `php artisan serve`
+- **Iniciar Vite**: `npm run dev`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Backups y Seguridad
 
-## Security Vulnerabilities
+- **Backups**: Se recomienda realizar copias de seguridad de la base de datos `yute_dba` regularmente utilizando el comando:
+  ```sh
+  mysqldump -u root -p yute_dba > backup_yute_dba.sql
+  ```
+  Este comando se puede automatizar con el uso del Programador de Tareas en Windows.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Protección CSRF**: Laravel tiene protección CSRF integrada. Todos los formularios contienen tokens CSRF para evitar ataques.
 
-## License
+## Contribuciones
+Las contribuciones son bienvenidas. Por favor, realiza un fork del proyecto, crea una rama para tus cambios y abre un Pull Request cuando estés listo para que se revisen.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
