@@ -207,22 +207,27 @@ const productosFiltrados = computed(() => {
 
 // Agregar un producto a la cotización
 const agregarProducto = (producto) => {
-  if (producto.stock > 0) {
+ 
+  const productoOriginal = productos.value.find(p => p.id === producto.id);
+
+  if (productoOriginal && productoOriginal.stock > 0) {
     const productoExistente = productosSeleccionados.find(p => p.id === producto.id);
+
     if (productoExistente) {
-      if (producto.stock > productoExistente.cantidad) {
+      // Aumentar la cantidad solo si hay suficiente stock
+      if (productoOriginal.stock > 0) {
         productoExistente.cantidad++;
         productoExistente.subtotal = productoExistente.cantidad * producto.precio;
+        productoOriginal.stock--; 
       } else {
         alert('No hay suficiente stock disponible para agregar más de este producto.');
         return;
       }
     } else {
-      productosSeleccionados.push({ ...producto, cantidad: 1, subtotal: producto.precio });
+      // Si no existe en el carrito, agregar con una cantidad inicial de 1
+      productosSeleccionados.push({ ...producto, cantidad: 1, subtotal: producto.precio, cantidadAnterior: 1 });
+      productoOriginal.stock--;
     }
-    
-    // Restar 1 del stock disponible del producto
-    producto.stock--;
 
     actualizarTotales();
   } else {
@@ -230,9 +235,15 @@ const agregarProducto = (producto) => {
   }
 };
 
-
 // Eliminar un producto de la cotización
 const eliminarProducto = (index) => {
+  const productoSeleccionado = productosSeleccionados[index];
+  const productoOriginal = productos.value.find(p => p.id === productoSeleccionado.id);
+
+  if (productoOriginal) {
+    productoOriginal.stock += productoSeleccionado.cantidad; 
+  }
+
   productosSeleccionados.splice(index, 1);
   actualizarTotales();
 };
@@ -241,36 +252,43 @@ const eliminarProducto = (index) => {
 const actualizarSubtotal = (index) => {
   const productoSeleccionado = productosSeleccionados[index];
 
-  // Encuentra el producto original de la lista de productos
+
   const productoOriginal = productos.value.find(p => p.id === productoSeleccionado.id);
 
   if (productoOriginal) {
-    // Calcula la diferencia entre la nueva cantidad y la cantidad previamente seleccionada
-    const diferencia = productoSeleccionado.cantidad - (productoSeleccionado.cantidadAnterior || 1);
+    const cantidadAnterior = productoSeleccionado.cantidadAnterior || 1;
+    const cantidadNueva = productoSeleccionado.cantidad;
 
-    if (productoOriginal.stock >= diferencia) {
-      // Actualiza el stock disponible
-      productoOriginal.stock -= diferencia;
+    
+    const diferencia = cantidadNueva - cantidadAnterior;
 
-      // Almacena la cantidad actual para futuros cálculos
-      productoSeleccionado.cantidadAnterior = productoSeleccionado.cantidad;
-
-      // Actualiza el subtotal del producto seleccionado
-      productoSeleccionado.subtotal = productoSeleccionado.precio * productoSeleccionado.cantidad;
-
-      // Actualiza los totales generales
-      actualizarTotales();
-    } else {
-      // Si no hay suficiente stock, evita el cambio y muestra un mensaje
-      alert('No hay suficiente stock disponible para esta cantidad.');
-      // Restablece la cantidad al valor anterior
-      productoSeleccionado.cantidad = productoSeleccionado.cantidadAnterior || 1;
+    
+    if (diferencia > 0) {
+      if (productoOriginal.stock >= diferencia) {
+        productoOriginal.stock -= diferencia;
+      } else {
+        alert('No hay suficiente stock disponible para esta cantidad.');
+       
+        productoSeleccionado.cantidad = cantidadAnterior;
+        return;
+      }
+    } else if (diferencia < 0) {
+      // Si la diferencia es negativa (decremento), incrementar el stock
+      productoOriginal.stock += Math.abs(diferencia);
     }
+
+    // Actualizar la cantidad anterior con la nueva
+    productoSeleccionado.cantidadAnterior = cantidadNueva;
+
+    // Actualizar el subtotal del producto
+    productoSeleccionado.subtotal = productoSeleccionado.precio * cantidadNueva;
+
+    // Actualizar los totales generales
+    actualizarTotales();
   }
 };
 
 
-// Calcular el total de productos y el precio total
 const totalProductos = computed(() => productosSeleccionados.reduce((acc, producto) => acc + producto.cantidad, 0));
 const precioTotal = computed(() => productosSeleccionados.reduce((acc, producto) => acc + producto.subtotal, 0));
 
