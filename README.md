@@ -37,7 +37,7 @@ Este proyecto es una aplicación web desarrollada con Vue 3 y Laravel 10 , utili
    ```env
    DB_DATABASE=yute_dba
    DB_USERNAME=root
-   DB_PASSWORD=
+   DB_PASSWORD="" sin contraseña o si es necesario aplicar 1234
    ```
 
 5. **Generar la Clave de la Aplicación**
